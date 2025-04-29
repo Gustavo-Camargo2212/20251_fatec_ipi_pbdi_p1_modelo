@@ -6,10 +6,10 @@
 
 <br>
 
-| Nome completo | RA |
-|:--------------|:---|
-|                |     |
-|                |     |
+| Nome completo                        | RA |
+|:--------------                       |:---|
+|Eduardo Yukio Yokomizo                |2041382411008     |
+|Gustavo Camargo Souza                 |2041382411007     |
 |                |     |
 |                |     |
 |                |     |
