@@ -3,7 +3,8 @@
 --escreva a sua solução aqui
 CREATE TABLE ESTUDANTES (
     ID SERIAL PRIMARY KEY,
-    HS_TYPE INT,
+    MOTHER_EDU INT,
+    FATHER_EDU INT,
     GRADE INT,
     PREP_STUDY INT,
     PARTNER INT,
