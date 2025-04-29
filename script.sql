@@ -20,8 +20,8 @@ DO $$
 DECLARE
     cur_estudantes CURSOR FOR
         SELECT id, mother_edu, father_edu, grade FROM estudantes
-        WHERE grade >= 5
-          AND (mother_edu = 1 OR father_edu = 1);
+        WHERE grade >= 2
+          AND (mother_edu = 6 OR father_edu = 6);
 
     v_id INT;
     v_mother_edu INT;
@@ -58,7 +58,7 @@ DECLARE
 
     contador_aprovados_sozinhos INT := 0;
 BEGIN
-    sql_query := 'SELECT id, grade, partner FROM estudantes WHERE grade >= 5 AND partner >= 2';
+    sql_query := 'SELECT id, grade, partner FROM estudantes WHERE grade >= 1 AND partner = 2';
     OPEN cur_estudantes FOR EXECUTE sql_query;
 
     LOOP
@@ -80,7 +80,30 @@ END $$;
 -- ----------------------------------------------------------------
 -- 4 Salário versus estudos
 --escreva a sua solução aqui
+DO $$
+DECLARE
+    cur_salario_estudo CURSOR FOR
+    SELECT ID
+    FROM ESTUDANTES
+    WHERE SALARY = 5
+    AND PREP_STUDY = 2;
 
+    v_estudante_id INT;
+    v_count_estudante INT := 0;
+    
+BEGIN
+    OPEN cur_salario_estudo;
+
+    LOOP
+        FETCH cur_salario_estudo INTO v_estudante_id;
+        EXIT WHEN NOT FOUND;
+        v_count_estudante := v_count_estudante + 1;
+    END LOOP;
+
+    CLOSE cur_salario_estudo;
+    RAISE NOTICE 'Número de alunos com salário > 410 e preparação regular: %', v_count_estudante;
+
+END $$;
 
 -- ----------------------------------------------------------------
 -- 5. Limpeza de valores NULL
