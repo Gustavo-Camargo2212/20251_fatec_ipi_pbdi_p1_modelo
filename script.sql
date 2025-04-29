@@ -1,6 +1,15 @@
 -- ----------------------------------------------------------------
 -- 1 Base de dados e criação de tabela
 --escreva a sua solução aqui
+CREATE TABLE ESTUDANTES (
+    ID SERIAL PRIMARY KEY,
+    HS_TYPE INT,
+    GRADE INT,
+    PREP_STUDY INT,
+    PARTNER INT,
+    SALARY INT,
+    PREP_EXAM INT
+);
 
 
 -- ----------------------------------------------------------------
