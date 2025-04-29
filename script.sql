@@ -58,7 +58,7 @@ DECLARE
 
     contador_aprovados_sozinhos INT := 0;
 BEGIN
-    sql_query := 'SELECT id, grade, partner FROM estudantes WHERE grade >= 1 AND partner = 2';
+    sql_query := 'SELECT id, grade, partner FROM estudantes WHERE grade >= 2 AND partner = 2';
     OPEN cur_estudantes FOR EXECUTE sql_query;
 
     LOOP
@@ -108,5 +108,49 @@ END $$;
 -- ----------------------------------------------------------------
 -- 5. Limpeza de valores NULL
 --escreva a sua solução aqui
+DO $$
+DECLARE
+    cur_null_removal REFCURSOR;
+    v_id INTEGER;
+    v_mother_edu INTEGER;
+    v_father_edu INTEGER;
+    v_grade INTEGER;
+    v_prep_study INTEGER;
+    v_partner INTEGER;
+    v_salary INTEGER;
+    v_prep_exam INTEGER;
+BEGIN
+    OPEN cur_null_removal FOR SELECT id, mother_edu, father_edu, grade, prep_study, partner, salary, prep_exam FROM ESTUDANTES;
 
+    LOOP
+        FETCH cur_null_removal INTO v_id, v_mother_edu, v_father_edu, v_grade, v_prep_study, v_partner, v_salary, v_prep_exam;
+        EXIT WHEN NOT FOUND;
+
+        IF v_mother_edu IS NULL OR
+           v_father_edu IS NULL OR
+           v_grade IS NULL OR
+           v_prep_study IS NULL OR
+           v_partner IS NULL OR
+           v_salary IS NULL OR
+           v_prep_exam IS NULL THEN
+
+            RAISE NOTICE 'Tupla com NULL (ESTUDANTES - ID: %): MOTHER_EDU=%, FATHER_EDU=%, GRADE=%, PREP_STUDY=%, PARTNER=%, SALARY=%, PREP_EXAM=%',
+                         v_id, v_mother_edu, v_father_edu, v_grade, v_prep_study, v_partner, v_salary, v_prep_exam;
+
+            DELETE FROM ESTUDANTES WHERE ID = v_id;
+        END IF;
+    END LOOP;
+
+    CLOSE cur_null_removal;
+
+    OPEN cur_null_removal FOR SELECT id, mother_edu, father_edu, grade, prep_study, partner, salary, prep_exam FROM ESTUDANTES;
+    LOOP
+        FETCH BACKWARD cur_null_removal INTO v_id, v_mother_edu, v_father_edu, v_grade, v_prep_study, v_partner, v_salary, v_prep_exam;
+        EXIT WHEN NOT FOUND;
+        RAISE NOTICE 'Tupla Remanescente (ESTUDANTES - ID: %): MOTHER_EDU=%, FATHER_EDU=%, GRADE=%, PREP_STUDY=%, PARTNER=%, SALARY=%, PREP_EXAM=%',
+                     v_id, v_mother_edu, v_father_edu, v_grade, v_prep_study, v_partner, v_salary, v_prep_exam;
+    END LOOP;
+    CLOSE cur_null_removal;
+
+END $$;
 -- ----------------------------------------------------------------
