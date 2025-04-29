@@ -20,7 +20,7 @@ DO $$
 DECLARE
     cur_estudantes CURSOR FOR
         SELECT id, mother_edu, father_edu, grade FROM estudantes
-        WHERE grade = 1
+        WHERE grade >= 5
           AND (mother_edu = 1 OR father_edu = 1);
 
     v_id INT;
@@ -48,6 +48,33 @@ END $$;
 -- ----------------------------------------------------------------
 -- 3 Resultado em função dos estudos
 --escreva a sua solução aqui
+DO $$
+DECLARE
+    sql_query TEXT;
+    cur_estudantes REFCURSOR;
+    v_id INT;
+    v_grade INT;
+    v_partner INT;
+
+    contador_aprovados_sozinhos INT := 0;
+BEGIN
+    sql_query := 'SELECT id, grade, partner FROM estudantes WHERE grade >= 5 AND partner >= 2';
+    OPEN cur_estudantes FOR EXECUTE sql_query;
+
+    LOOP
+        FETCH cur_estudantes INTO v_id, v_grade, v_partner;
+        EXIT WHEN NOT FOUND;
+
+        contador_aprovados_sozinhos := contador_aprovados_sozinhos + 1;
+    END LOOP;
+
+    CLOSE cur_estudantes;
+    IF contador_aprovados_sozinhos > 0 THEN
+        RAISE NOTICE 'Total de alunos aprovados que estudam sozinhos: %', contador_aprovados_sozinhos;
+    ELSE
+        RAISE NOTICE 'Nenhum aluno aprovado que estuda sozinho. Valor retornado: -1';
+    END IF;
+END $$;
 
 
 -- ----------------------------------------------------------------
